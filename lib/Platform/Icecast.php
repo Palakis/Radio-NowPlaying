@@ -27,8 +27,8 @@ class Platform_Icecast implements PlatformInterface {
 	private function sendToMount($artist, $title, $mount) {
 		$url = "http://".$this->host.":".$this->port."/admin/metadata?mode=updinfo";
 		$url .= "&mount=".$mount;		
-		$url .= "&song=".rawurlencode($artist." - ".$title);
-	
+		$url .= "&song=".rawurlencode(utf8_decode($artist." - ".$title));
+
 		SimpleHTTP::get($url, array(
 			"username" => $this->username, 
 			"password" => $this->password

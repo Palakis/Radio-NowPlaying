@@ -15,9 +15,14 @@ class SimpleHTTP {
 		$response = curl_exec($curl);
 
 		if(curl_errno($curl) != 0) {
-			throw new Exception("CURL - ".curl_error($curl));
+			throw new Exception("CURL internal error - ".curl_error($curl));
 		}
 
+		$returnCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+		if($returnCode != 200) {
+			throw new Exception("HTTP error code ".$returnCode. "for URL '".$url."'");
+		}
+ 
 		curl_close($curl);
 		return $response;		
 	}
@@ -48,6 +53,11 @@ class SimpleHTTP {
 
 		if(curl_errno($curl) != 0) {
 			throw new Exception("CURL error : ".curl_error($curl));
+		}
+
+		$returnCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+		if($returnCode != 200) {
+			throw new Exception("HTTP error code ".$returnCode. " for URL '".$url."'");
 		}
 
 		curl_close($curl);

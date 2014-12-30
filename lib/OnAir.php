@@ -106,8 +106,8 @@ class OnAir {
 		echo "OK";
 	}
 
-	public static function Log($message) {
-		file_put_contents("errors.log", "[".date("d/m/Y h:i:s")."] ".$message."\n", FILE_APPEND);
+	public static function Log($message, $filename = "errors.log") {
+		file_put_contents($filename, "[".date("d/m/Y h:i:s")."] ".$message."\n", FILE_APPEND);
 		echo $message."\n";
 	}
 }
