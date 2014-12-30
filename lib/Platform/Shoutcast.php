@@ -4,24 +4,25 @@ class Platform_Shoutcast implements PlatformInterface {
 	private $port;
 	private $password;
 
-	public function __construct($host, $port, $password) {
-		$this->host = $host;
-		$this->port = $port;
-		$this->password = $password;
-	}
-
-	public function __construct() {
+	public function __construct(array $config) {
 		$this->host = $config['host'];
 		$this->port = $config['port'];
 		$this->password = $config['password'];
 	}
 
-	public function send($artist, $title, $type, $coverUrl) {
+	public function send(Metadata $meta) {
 		$url = "http://".$this->host.":".$this->port."/admin.cgi?mode=updinfo";
 		$url .= "&pass=".$this->password;
-		$url .= "&song=".rawurlencode(utf8_decode($artist." - ".$title));
+		$url .= "&song=".rawurlencode(utf8_decode($meta->Oneliner));
 		
-		SimpleHTTP::get($url);
+		try {
+			SimpleHTTP::get($url);
+		}
+		catch(Exception $ex) {
+			if(strstr($ex->getMessage(), "Empty reply from server") == false) {
+				throw $ex;
+			}
+		}		
 	}
 }
 ?>

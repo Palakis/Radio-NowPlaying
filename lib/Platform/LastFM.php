@@ -9,18 +9,18 @@ class Platform_LastFM implements PlatformInterface {
 		$this->lastfm->login($config['username'], $config['password']);
 	}
 
-	public function send($artist, $title, $type, $coverUrl) {
-		if($type != "Music") {
+	public function send(Metadata $meta) {
+		if($meta->Type != "Music") {
 			return;
 		}
 
 		$this->lastfm->callMethod("track.updateNowPlaying", array(
-			"artist" => $artist,
-			"track" => $title
+			"artist" => $meta->Artist,
+			"track" => $meta->Title
 		));
 		$this->lastfm->callMethod("track.scrobble", array(
-			"artist[0]" => $artist,
-			"track[0]" => $title,
+			"artist[0]" => $meta->Artist,
+			"track[0]" => $meta->Title,
 			"timestamp[0]" => time()
 		));
 	}

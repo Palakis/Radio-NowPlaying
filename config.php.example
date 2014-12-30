@@ -2,16 +2,22 @@
 $config = array(
 	// Class name of the cover art provider
 	"coverArtProvider" => "Deezer",
+	
 	// Deletes unwanted text
 	"textFilters" => array(
 		" POWER INTRO",
 		"\(radio edit\)"
 	),
+	
 	// Only allowed some specific source hosts
 	"allowedHosts" => array(
 		"studio.yourstation.com",
 		"127.0.0.1"
 	),
+	
+	// Minimum item duration
+	"minDuration" => 30,
+	
 	// Target platforms for metadata
 	"platforms" => array(
 		// Writes current song metadata to a JSON file

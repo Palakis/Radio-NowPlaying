@@ -8,7 +8,7 @@ class Platform_JSONPlaylist implements PlatformInterface {
 		$this->maxKeepTime = $config['maxKeepTime'];
 	}
 
-	public function send($artist, $title, $type, $coverUrl) {
+	public function send(Metadata $meta) {
 		if(!file_exists($this->filename)) {
 			file_put_contents($this->filename, json_encode(array()));
 		}
@@ -27,10 +27,10 @@ class Platform_JSONPlaylist implements PlatformInterface {
 		}	
 
 		$newData[] = array(
-			'artist' => $artist, 
-			'title' => $title, 
-			'type' => $type, 
-			'cover' => $coverUrl,
+			'artist' => $meta->Artist, 
+			'title' => $meta->Title, 
+			'type' => $meta->Type, 
+			'cover' => $meta->CoverArt,
 			'start_time' => time()
 		);
 

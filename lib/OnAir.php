@@ -1,24 +1,17 @@
 <?php
 class OnAir {
-	private $allowedHosts;
+	private $config;
+
 	private $platforms;
-	private $textFilters;
-	
-	private $title;
-	private $artist;
-	private $type;
-	private $coverUrl;
-	private $duration;
-
-	private $hostCheck;
-	private $durationCheck;
-	private $minDuration;
-
 	private $coverProvider;
+	private $meta;
 
 	public function __construct() {
+		if($_REQUEST['type'] == 'Music' && !isset($_REQUEST['title'])) {
+			throw new Exception("Missing parameters for type Music");
+		}
+
 		if(!isset($_REQUEST['artist'])
-		|| !isset($_REQUEST['title'])
 		|| !isset($_REQUEST['type'])
 		|| !isset($_REQUEST['duration'])) {
 			throw new Exception("Missing parameters");
@@ -28,19 +21,21 @@ class OnAir {
 		$this->platforms = array();
 		$this->textFilters = array();
 
-		$this->hostCheck = true;
-		$this->durationCheck = true;
-		$this->minDuration = 30;
+		$this->meta = new Metadata();
+		$this->meta->Artist = $this->filter($_REQUEST['artist']);
+		$this->meta->Type = $this->filter($_REQUEST['type']);
 
-		$this->artist = $this->filter($_REQUEST['artist']);
-		$this->title = $this->filter($_REQUEST['title']);
-		$this->type = $this->filter($_REQUEST['type']);
-		$this->duration = intval($this->filter($_REQUEST['duration']));
+		$this->meta->Oneliner = $this->meta->Artist;
+		if(isset($_REQUEST['title'])) {
+			$this->meta->Title = $this->filter($_REQUEST['title']);
+			$this->meta->Oneliner .= " - ".$this->meta->Title;
+		}
+
+		$this->meta->Duration = intval($this->filter($_REQUEST['duration']));
 	}	
 
 	public function loadConfig(array $config) {
-		$this->textFilters = $config['textFilters'];
-		$this->allowedHosts = $config['allowedHosts'];
+		$this->config = $config;
 
 		try {
 			$class = 'CoverArt_'.$config['coverArtProvider'];
@@ -61,22 +56,15 @@ class OnAir {
 		$this->platforms[] = $platform;
 	}
 
-	public function disableHostCheck() {
-		$this->hostCheck = false;
-	}
-
-	public function disableDurationCheck() {
-		$this->durationCheck = false;
-	}
-
 	private function filter($value) {
 		return stripslashes(html_entity_decode(utf8_encode($value), ENT_QUOTES));
 	}
 
 	public function run() {
-		if($this->hostCheck) {
+		if(isset($this->config['allowedHosts']) 
+		&& is_array($this->config['allowedHosts'])) {
 			$allow = false;
-			foreach($this->allowedHosts as $host) {
+			foreach($this->config['allowedHosts'] as $host) {
 				if(gethostbyname($host) == $_SERVER['REMOTE_ADDR']) {
 					$allow = true;
 				}
@@ -87,20 +75,21 @@ class OnAir {
 			}
 		}
 		
-
-		if($this->durationCheck && ($this->duration < $this->minDuration)) {
-			throw new Exception("Song too short - duration less than 30 seconds");
+		if(isset($this->config['minDuration'])
+		&& $this->config['minDuration'] > 0
+		&& ($this->meta->Duration < $this->config['minDuration'])) {
+			throw new Exception("Song too short - duration less than ".$this->config['minDuration']." seconds");
 		}
 
-		foreach($this->textFilters as $filter) {
-			$this->artist = preg_replace("/".$filter."/i", "", $this->artist);
-			$this->title = preg_replace("/".$filter."/i", "", $this->title);
+		foreach($this->config['textFilters'] as $filter) {
+			$this->meta->Artist = preg_replace("/".$filter."/i", "", $this->meta->Artist);
+			$this->meta->Title = preg_replace("/".$filter."/i", "", $this->meta->Title);
 		}
 
-		$this->coverUrl = $this->coverProvider->getCover($this->artist, $this->title);
+		$this->meta->CoverArt = $this->coverProvider->getCover($this->meta->Artist, $this->meta->Title);
 
 		foreach($this->platforms as $platform) {
-			$platform->send($this->artist, $this->title, $this->type, $this->coverUrl);
+			$platform->send($this->meta);
 		}
 
 		echo "OK";

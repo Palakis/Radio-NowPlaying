@@ -6,10 +6,8 @@ class Platform_WRTXmlFile implements PlatformInterface {
 		$this->filename = $config['filename'];
 	}
 
-	public function send($artist, $title, $type, $coverUrl) {
+	public function send(Metadata $meta) {
 		$doc = new DomDocument('1.0', 'utf-8');
-
-		$showTitle = $artist." - ".$title;
 
 		// -- Création de l'arbre
 		$racine = $doc->createElement("WebRadioTools");
@@ -24,14 +22,14 @@ class Platform_WRTXmlFile implements PlatformInterface {
 		$onair = $doc->createElement("onair");
 
 		$dispTitle = $doc->createElement("displayed_title");
-		$dispTitle->appendChild($doc->createTextNode($showTitle));
+		$dispTitle->appendChild($doc->createTextNode($meta->Oneliner));
 		$onair->appendChild($dispTitle);
 
 		$song = $doc->createElement("song");
 
 		// -- Enfants de song
 		$titleTag = $doc->createElement("title");
-		$titleTag->appendChild($doc->createTextNode($title));
+		$titleTag->appendChild($doc->createTextNode($meta->Title));
 
 		$start = $doc->createElement("start");
 		$start->appendChild($doc->createTextNode(time()));
@@ -39,7 +37,7 @@ class Platform_WRTXmlFile implements PlatformInterface {
 		$artistTag = $doc->createElement("artist");
 
 		$alias = $doc->createElement("alias");
-		$alias->appendChild($doc->createTextNode($artist));
+		$alias->appendChild($doc->createTextNode($meta->Artist));
 		$artistTag->appendChild($alias);
 
 		$song->appendChild($titleTag);

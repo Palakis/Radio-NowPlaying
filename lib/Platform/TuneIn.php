@@ -10,13 +10,13 @@ class Platform_TuneIn implements PlatformInterface {
 		$this->stationId = $config['stationId'];
 	}
 
-	public function send($artist, $title, $type, $coverUrl) {
+	public function send(Metadata $meta) {
 		$url = "http://air.radiotime.com/Playing.ashx";
 		$url .= "?partnerId=".$this->partnerId;
 		$url .= "&partnerKey=".$this->partnerKey;
 		$url .= "&id=".$this->stationId;
-		$url .= "&title=".$title;
-		$url .= "&artist=".$artist;
+		$url .= "&title=".$meta->Title;
+		$url .= "&artist=".$meta->Artist;
 		
 		SimpleHTTP::get($url);
 	}
