@@ -14,7 +14,7 @@ class OnAir {
 	private $durationCheck;
 	private $minDuration;
 
-	private $coverSearch;
+	private $coverProvider;
 
 	public function __construct() {
 		if(!isset($_REQUEST['artist'])
@@ -23,8 +23,7 @@ class OnAir {
 		|| !isset($_REQUEST['duration'])) {
 			throw new Exception("Missing parameters");
 		}
-
-		$this->coverSearch = new CoverArt();			
+			
 		$this->allowedHosts = array();
 		$this->platforms = array();
 		$this->textFilters = array();
@@ -43,14 +42,17 @@ class OnAir {
 		$this->textFilters = $config['textFilters'];
 		$this->allowedHosts = $config['allowedHosts'];
 
-		foreach($config['platforms'] as $key => $value) {
-			try {
+		try {
+			$class = 'CoverArt_'.$config['coverArtProvider'];
+			$this->coverProvider = new $class();
+
+			foreach($config['platforms'] as $key => $value) {
 				$class = 'Platform_'.$key;
 				$this->addPlatform(new $class($value));
 			}
-			catch(Exception $ex) {
-				$this::Log($ex->getMessage());
-			}
+		}
+		catch(Exception $ex) {
+			$this::Log($ex->getMessage());
 		}
 	}
 
@@ -94,7 +96,7 @@ class OnAir {
 			$this->title = preg_replace("/".$filter."/i", "", $this->title);
 		}
 
-		$this->coverUrl = $this->coverSearch->getCover($this->artist, $this->title);
+		$this->coverUrl = $this->coverProvider->getCover($this->artist, $this->title);
 
 		foreach($this->platforms as $platform) {
 			$platform->send($this->artist, $this->title, $this->type, $this->coverUrl);

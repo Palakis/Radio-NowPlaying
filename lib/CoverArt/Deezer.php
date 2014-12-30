@@ -1,5 +1,5 @@
 <?php
-class CoverArt {
+class CoverArt_Deezer implements CoverArtInterface {
 	private $endpoint = "http://api.deezer.com/2.0/";
 	private $defaultImg = null;
 

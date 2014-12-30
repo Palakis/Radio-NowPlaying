@@ -1,0 +1,55 @@
+<?php
+$config = array(
+	// Class name of the cover art provider
+	"coverArtProvider" => "Deezer",
+	// Deletes unwanted text
+	"textFilters" => array(
+		" POWER INTRO",
+		"\(radio edit\)"
+	),
+	// Only allowed some specific source hosts
+	"allowedHosts" => array(
+		"studio.yourstation.com",
+		"127.0.0.1"
+	),
+	// Target platforms for metadata
+	"platforms" => array(
+		// Writes current song metadata to a JSON file
+		"JSONFile" => array(
+			"filename" => "onair.json"
+		),
+		// Writes recent songs history to a JSON file
+		"JSONPlaylist" => array(
+			"filename" => "playlist.json",
+			"maxKeepTime" => 86400
+		),
+		// Writes current song metadata to an XML file compatible with WebRadioTools
+		"WRTXmlFile" => array(
+			"filename" => "onair.xml"
+		),
+		// Sends current song metadata to a shoutcast server
+		"Shoutcast" => array(
+			"host" => "stream.yourstation.com",
+			"port" => 8000,
+			"password" => "hackme"
+		),
+		// Sends current song metadata to one or several mountpoints of an Icecast server
+		"Icecast" => array(
+			"host" => "stream.yourstation.com",
+			"port" => 8000,
+			"username" => "admin",
+			"password" => "hackme",
+			"mount" => "stream.mp3",
+			// You can also give an array to the "mount" parameter if you want to send metadata to several mountpoints
+			//"mount" => array("stream.mp3", "hd-stream.mp3", "mobile-stream.mp3") 
+		),
+		// Sends current song metadata and song history to your LastFM profile
+		"LastFM" => array(
+			"apiKey" => "mySuperApiKey",
+			"apiSecret" => "MySuperSecretSecretKey",
+			"username" => "myradiostation",
+			"password" => "hackme"
+		)
+	)
+);
+?>
