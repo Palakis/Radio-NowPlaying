@@ -2,8 +2,8 @@
 class Platform_WRTXmlFile implements PlatformInterface {
 	private $filename;
 
-	public function __construct(array $filename) {
-		$this->filename = $filename;
+	public function __construct(array $config) {
+		$this->filename = $config['filename'];
 	}
 
 	public function send($artist, $title, $type, $coverUrl) {
