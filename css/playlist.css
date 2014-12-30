@@ -1,0 +1,26 @@
+table#playlist {
+	border-width: 1px;
+	border-spacing: 2px;
+	border-style: solid;
+	border-color: black;
+	border-collapse: collapse;
+	width: 100%;
+}
+table#playlist th {
+	border-width: 1px;
+	padding: 2px;
+	border-style: solid;
+	border-color: black;
+	color: white;
+	background-color: black;
+	-moz-border-radius: ;
+}
+table#playlist td {
+	text-align: center;
+	border-width: 1px;
+	padding: 2px;
+	border-style: solid;
+	border-color: black;
+	background-color: #cccccc;
+	-moz-border-radius: ;
+}
