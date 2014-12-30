@@ -5,12 +5,19 @@ class SimpleHTTP {
 		curl_setopt($curl, CURLOPT_URL, $url);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($curl, CURLOPT_USERAGENT, $useragent);
+		curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 		if($auth != null && is_array($auth)) {
 			curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
 			curl_setopt($curl, CURLOPT_USERPWD, $auth["username"].":".$auth["password"]);
 		}
 
 		$response = curl_exec($curl);
+
+		if(curl_errno($curl) != 0) {
+			throw new Exception("CURL - ".curl_error($curl));
+		}
+
 		curl_close($curl);
 		return $response;		
 	}
@@ -20,6 +27,8 @@ class SimpleHTTP {
 		curl_setopt($curl, CURLOPT_URL, $url);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($curl, CURLOPT_USERAGENT, $useragent);
+		curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 		if($auth != null && is_array($auth)) {
 			curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
 			curl_setopt($curl, CURLOPT_USERPWD, $auth["username"].":".$auth["password"]);
@@ -36,6 +45,11 @@ class SimpleHTTP {
 		curl_setopt($curl, CURLOPT_POSTFIELDS, $datastring);
 
 		$response = curl_exec($curl);
+
+		if(curl_errno($curl) != 0) {
+			throw new Exception("CURL error : ".curl_error($curl));
+		}
+
 		curl_close($curl);
 		return $response;
 	}

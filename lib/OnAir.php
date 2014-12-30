@@ -53,6 +53,7 @@ class OnAir {
 		}
 		catch(Exception $ex) {
 			$this::Log($ex->getMessage());
+			die();
 		}
 	}
 
@@ -107,7 +108,7 @@ class OnAir {
 
 	public static function Log($message) {
 		file_put_contents("errors.log", "[".date("d/m/Y h:i:s")."] ".$message."\n", FILE_APPEND);
-		die("Error : ".$message);
+		echo $message."\n";
 	}
 }
 ?>
