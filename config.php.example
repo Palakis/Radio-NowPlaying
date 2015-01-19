@@ -1,5 +1,8 @@
 <?php
 $config = array(
+	// Accept only POST requests
+	"forcePost" => false,
+	
 	// Class name of the cover art provider
 	"coverArtProvider" => "Deezer",
 	

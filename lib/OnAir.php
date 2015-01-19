@@ -6,7 +6,15 @@ class OnAir {
 	private $coverProvider;
 	private $meta;
 
-	public function __construct() {
+	public function __construct(array $config) {
+		$this->loadConfig($config);
+
+		if(isset($this->config['forcePost'])
+		   && $this->config['forcePost']
+		   && $_SERVER['REQUEST_METHOD'] != "POST") {
+			throw new Exception('Unsupported method');
+		}
+
 		if($_REQUEST['type'] == 'Music' && !isset($_REQUEST['title'])) {
 			throw new Exception("Missing parameters for type Music");
 		}

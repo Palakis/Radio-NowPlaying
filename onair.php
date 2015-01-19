@@ -13,8 +13,7 @@ require_once 'config.php';
 
 try {
 	// Do not touch this
-	$onair = new OnAir();
-	$onair->loadConfig($config);
+	$onair = new OnAir($config);
 	$onair->run();
 }
 catch(Exception $ex) {
