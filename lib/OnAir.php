@@ -3,7 +3,7 @@ class OnAir {
 	private $config; // Self-explanatory
 
 	private $platforms; // Metadata destinations
-	private $coverProvider; // Cover art providers
+	private $dataProvider; // External track data provider
 	private $meta; // Metadata to send
 
 	private $allowedHosts; // Hosts allowed to send metadata
@@ -11,8 +11,7 @@ class OnAir {
 
 	public function __construct(array $config) {
 		// Load config in this object
-		// and instanciate platform classes and cover art providers
-		$this->loadConfig($config);
+		$this->config = $config;
 
 		// POST check
 		if(isset($this->config['forcePost'])
@@ -33,48 +32,7 @@ class OnAir {
 			throw new Exception("Missing parameters");
 		}
 
-		// Init metadata values
-		$this->meta = new Metadata();
-		$this->meta->Artist = $this->filter($_REQUEST['artist']);
-		$this->meta->Type = $this->filter($_REQUEST['type']);
-		$this->meta->Duration = intval($this->filter($_REQUEST['duration']));
-
-		// Generate a oneliner
-		$this->meta->Oneliner = $this->meta->Artist;
-		if(isset($_REQUEST['title'])) {
-			$this->meta->Title = $this->filter($_REQUEST['title']);
-			$this->meta->Oneliner .= " - ".$this->meta->Title;
-		}
-	}	
-
-	public function loadConfig(array $config) {
-		$this->config = $config;
-		$this->platforms = array();
-
-		try {
-			$class = 'CoverArt_'.$config['coverArtProvider'];
-			$this->coverProvider = new $class();
-
-			foreach($config['platforms'] as $key => $value) {
-				$class = 'Platform_'.$key;
-				$this->addPlatform(new $class($value));
-			}
-		}
-		catch(Exception $ex) {
-			$this::Log($ex->getMessage());
-			die();
-		}
-	}
-
-	public function addPlatform(PlatformInterface $platform) {
-		$this->platforms[] = $platform;
-	}
-
-	private function filter($value) {
-		return stripslashes(html_entity_decode(utf8_encode($value), ENT_QUOTES));
-	}
-
-	public function run() {
+		// Check if requesting host is allowed
 		if(isset($this->config['allowedHosts']) 
 		&& is_array($this->config['allowedHosts'])) {
 			$allow = false;
@@ -89,19 +47,56 @@ class OnAir {
 			}
 		}
 		
+		// Check if song has min duration
 		if(isset($this->config['minDuration'])
 		&& $this->config['minDuration'] > 0
-		&& ($this->meta->Duration < $this->config['minDuration'])) {
+		&& (intval($_REQUEST['duration']) < $this->config['minDuration'])) {
 			throw new Exception("Song too short - duration less than ".$this->config['minDuration']." seconds");
 		}
 
+		// Instanciate platform classes
+		$this->loadPlatforms($this->config);
+	}	
+
+	public function run() {
+		// Init metadata values
+		$this->meta = new Metadata();
+		$this->meta->Artist = $this->filter($_REQUEST['artist']);
+		$this->meta->Type = $this->filter($_REQUEST['type']);
+		$this->meta->Duration = intval($this->filter($_REQUEST['duration']));
+
+		// Generate a oneliner
+		$this->meta->Oneliner = $this->meta->Artist;
+		if(isset($_REQUEST['title'])) {
+			$this->meta->Title = $this->filter($_REQUEST['title']);
+			$this->meta->Oneliner .= " - ".$this->meta->Title;
+		}
+
+		// -- BEGIN PREPROCESSING --
 		foreach($this->config['textFilters'] as $filter) {
 			$this->meta->Artist = preg_replace("/".$filter."/i", "", $this->meta->Artist);
 			$this->meta->Title = preg_replace("/".$filter."/i", "", $this->meta->Title);
 		}
+		// -- END PREPROCESSING --
 
-		$this->meta->CoverArt = $this->coverProvider->getCover($this->meta->Artist, $this->meta->Title);
+		$this->loadDataProvider($this->meta->Artist, $this->meta->Title);
 
+		$this->meta->CoverArt = null;
+		$this->meta->Preview = null;
+		if($this->meta->Type = 'Music') {
+			try {
+				$this->meta->CoverArt = $this->dataProvider->getCover();
+			}
+			catch(Exception $ex) {}
+
+			try {
+				$this->meta->Preview = $this->dataProvider->getPreview();
+			}
+			catch(Exception $ex) {}
+		}
+
+		print_r($this->meta);
+		print "Presque... ";
 		foreach($this->platforms as $platform) {
 			$platform->send($this->meta);
 		}
@@ -112,6 +107,33 @@ class OnAir {
 	public static function Log($message, $filename = "errors.log") {
 		file_put_contents($filename, "[".date("d/m/Y h:i:s")."] ".$message."\n", FILE_APPEND);
 		echo $message."\n";
+	}
+
+	public function loadPlatforms($config) {
+		$this->platforms = array();
+		try {
+			foreach($config['platforms'] as $key => $value) {
+				$class = 'Platform_'.$key;
+				$this->addPlatform(new $class($value));
+			}
+		}
+		catch(Exception $ex) {
+			$this::Log($ex->getMessage());
+			die();
+		}
+	}
+
+	public function loadDataProvider($artist, $title) {
+		$class = 'DataProvider_'.$this->config['dataProvider'];
+		$this->dataProvider = new $class($artist, $title);
+	}
+
+	public function addPlatform(PlatformInterface $platform) {
+		$this->platforms[] = $platform;
+	}
+
+	private function filter($value) {
+		return stripslashes(html_entity_decode(utf8_encode($value), ENT_QUOTES));
 	}
 }
 ?>

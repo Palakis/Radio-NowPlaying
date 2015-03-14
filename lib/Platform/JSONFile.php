@@ -13,6 +13,7 @@ class Platform_JSONFile implements PlatformInterface {
 		$data['title'] = $meta->Title;
 		$data['type'] = $meta->Type;
 		$data['cover'] = $meta->CoverArt;
+		$data['preview'] = $meta->Preview;
 		$data['start_time'] = time();
 
 		file_put_contents($this->filename, json_encode($data));

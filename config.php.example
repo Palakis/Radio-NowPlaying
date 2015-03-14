@@ -3,8 +3,8 @@ $config = array(
 	// Accept only POST requests
 	"forcePost" => false,
 	
-	// Class name of the cover art provider
-	"coverArtProvider" => "Deezer",
+	// Class name of the cover art and preview URLs provider
+	"dataProvider" => "Deezer",
 	
 	// Deletes unwanted text
 	"textFilters" => array(

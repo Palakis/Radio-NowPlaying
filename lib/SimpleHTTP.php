@@ -20,7 +20,7 @@ class SimpleHTTP {
 
 		$returnCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 		if($returnCode != 200) {
-			throw new Exception("HTTP error code ".$returnCode. "for URL '".$url."'");
+			throw new Exception("HTTP error code ".$returnCode. " for URL '".$url."'");
 		}
  
 		curl_close($curl);

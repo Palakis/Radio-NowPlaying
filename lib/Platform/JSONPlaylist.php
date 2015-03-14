@@ -31,6 +31,7 @@ class Platform_JSONPlaylist implements PlatformInterface {
 			'title' => $meta->Title, 
 			'type' => $meta->Type, 
 			'cover' => $meta->CoverArt,
+			'preview' => $meta->Preview,
 			'start_time' => time()
 		);
 

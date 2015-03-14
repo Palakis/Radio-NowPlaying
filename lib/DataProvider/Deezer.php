@@ -1,23 +1,21 @@
 <?php
-class CoverArt_Deezer implements CoverArtInterface {
-	private $endpoint = "http://api.deezer.com/2.0/";
-	private $defaultImg = null;
+class DataProvider_Deezer implements DataProviderInterface {
+	protected $endpoint = "http://api.deezer.com/2.0/";
+        protected $artist;
+        protected $title;
 
-	public function __construct() {
-
+	public function __construct($artist, $title) {
+                $this->artist = $artist;
+                $this->title = $title;
 	}
 
-	public function setDefaultImg($url) {
-		$this->defaultImage = $url;
-	}
-
-	private function prepareForSearch($text) {
+	protected function prepareForSearch($text) {
 		return preg_replace("/Feat.+/i", "", $text);
 	}
 
-        public function getCover($artist, $title) {
-		$artist = $this->prepareForSearch($artist);
-		$title = $this->prepareForSearch($title);
+        public function getCover() {
+		$artist = $this->prepareForSearch($this->artist);
+		$title = $this->prepareForSearch($this->title);
 
                 $url = $this->endpoint;
 
@@ -35,8 +33,12 @@ class CoverArt_Deezer implements CoverArtInterface {
                 if($json->total > 0) {
                         return $json->data[0]->album->cover."?size=medium";
                 } else {
-                        return $this->defaultImg;
+                        throw new Exception('No cover art found');
                 }
+        }
+
+        public function getPreview() {
+                throw new Exception('Feature not implemented');
         }
 }
 ?>
