@@ -12,6 +12,9 @@ $.fn.onairplaylist = function(url, interval) {
 			var preciseReadableTime = readableTime + ":" + ("0" + time.getSeconds()).slice(-2);
 
 			var track = $('<tr>', {class: "track"});
+			if(item.type == "Show") {
+				track.css('background-color', 'orange');
+			}
 
 			var trackTime = $('<td>', {class: "track-time"});
 			trackTime.text(readableTime);

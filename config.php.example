@@ -1,7 +1,7 @@
 <?php
 $config = array(
-	// Accept only POST requests
-	"forcePost" => false,
+	// Accept only POST requests (highly recommended in production environments)
+	"forcePost" => true,
 	
 	// Class name of the cover art and preview URLs provider
 	"dataProvider" => "Spotify",
