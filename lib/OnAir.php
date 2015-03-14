@@ -95,8 +95,6 @@ class OnAir {
 			catch(Exception $ex) {}
 		}
 
-		print_r($this->meta);
-		print "Presque... ";
 		foreach($this->platforms as $platform) {
 			$platform->send($this->meta);
 		}
