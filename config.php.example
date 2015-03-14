@@ -9,7 +9,8 @@ $config = array(
 	// Deletes unwanted text
 	"textFilters" => array(
 		" POWER INTRO",
-		"\(radio edit\)"
+		"\(radio edit\)",
+		"(featuring|feat)(.+)"
 	),
 	
 	// Only allowed some specific source hosts

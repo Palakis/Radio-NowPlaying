@@ -9,13 +9,9 @@ class DataProvider_Deezer implements DataProviderInterface {
                 $this->title = $title;
 	}
 
-	protected function prepareForSearch($text) {
-		return preg_replace("/Feat.+/i", "", $text);
-	}
-
         public function getCover() {
-		$artist = $this->prepareForSearch($this->artist);
-		$title = $this->prepareForSearch($this->title);
+		$artist = $this->artist;
+		$title = $this->title;
 
                 $url = $this->endpoint;
 

@@ -26,10 +26,12 @@ class OnAir {
 		}
 
 		// Presence check for common parameters
-		if(!isset($_REQUEST['artist'])
-		|| !isset($_REQUEST['type'])
-		|| !isset($_REQUEST['duration'])) {
-			throw new Exception("Missing parameters");
+		if(isset($_REQUEST['type']) && $_REQUEST['type'] == 'Music') {
+			if(!isset($_REQUEST['artist'])
+			|| !isset($_REQUEST['type'])
+			|| !isset($_REQUEST['duration'])) {
+				throw new Exception("Missing parameters");
+			}
 		}
 
 		// Check if requesting host is allowed
@@ -48,7 +50,8 @@ class OnAir {
 		}
 		
 		// Check if song has min duration
-		if(isset($this->config['minDuration'])
+		if(isset($this->config['minDuration']) 
+		&& $_REQUEST['type'] == 'Music'
 		&& $this->config['minDuration'] > 0
 		&& (intval($_REQUEST['duration']) < $this->config['minDuration'])) {
 			throw new Exception("Song too short - duration less than ".$this->config['minDuration']." seconds");
@@ -83,7 +86,7 @@ class OnAir {
 
 		$this->meta->CoverArt = null;
 		$this->meta->Preview = null;
-		if($this->meta->Type = 'Music') {
+		if($this->meta->Type == 'Music') {
 			try {
 				$this->meta->CoverArt = $this->dataProvider->getCover();
 			}

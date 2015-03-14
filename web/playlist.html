@@ -12,7 +12,8 @@
 	
 	<style type="text/css">
 		.ctquoi-items .track {
-			height: 100px;
+			min-height: 20px;
+			max-height: 100px;
 			font-weight: bold;
 			border-top: none;
 		}
@@ -44,6 +45,13 @@
 			font-size: 18px;
 		}
 
+		.track-preview audio {
+			width: 100px;
+		}
+
+		.ctquoi-items .show {
+			font-weight: bold;			
+		}
 	</style>
 </head>
 <body>
@@ -53,33 +61,11 @@
 				<tr class="ctquoi-loading">
 					<td colspan="4">Chargement en cours</td>
 				</tr>
-				<tr class="track">
-					<td class="track-time">18:00</td>
-					<td class="track-cover">
-						<img src="img/nocd.png"> 
-					</td>
-					<td class="track-info">
-						<div class="track-artist">David Guetta</div>
-						<div class="track-title">Dangerous</div>
-					</td>
-					<td class="track-preview">PLAY</td>
-				</tr>
-				<tr>
-					<td class="track-time">18:00</td>
-					<td class="track-cover">
-						<img src="img/nocd.png"> 
-					</td>
-					<td class="track-info">
-						<div class="track-artist">David Guetta</div>
-						<div class="track-title">Dangerous</div>
-					</td>
-					<td class="track-preview">PLAY</td>
-				</tr>
 			</table>
 		</div>
 	</div>
 	<script type="text/javascript">
-
+		$(".ctquoi-items").onairplaylist("http://vps.rjrradio.fr/titrage/playlist.json", 2000);
 	</script>
 </body>
 </html>
