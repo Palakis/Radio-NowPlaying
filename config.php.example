@@ -10,7 +10,8 @@ $config = array(
 	"textFilters" => array(
 		" POWER INTRO",
 		"\(radio edit\)",
-		"(featuring|feat)(.+)"
+		"(\(?)(featuring|feat)(.+)",
+		"\(.+\)"
 	),
 	
 	// Only allowed some specific source hosts
