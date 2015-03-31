@@ -1,0 +1,53 @@
+.ctquoi-items .track {
+	min-height: 20px;
+	max-height: 100px;
+	font-weight: bold;
+}
+
+.ctquoi-items .track td {
+	vertical-align: middle;
+}
+
+.ctquoi-loading {
+	font-weight: bold;
+	text-align: center;
+}
+
+.track-time {
+	width: 12px;
+	font-size: 18px;
+}
+
+.track-cover {
+	width: 100px;
+}
+
+.track-cover > img {
+	width: inherit;
+	height: inherit;
+}
+
+.track-artist {
+	font-size: 22px;
+}
+
+.track-title {
+	font-size: 18px;
+}
+
+.track-preview {
+	width: 50px;
+}
+
+.ctquoi-items .show {
+	font-weight: bold;			
+}
+
+.ctquoi {
+	margin-top: 20px;
+}
+
+.preview {
+	font-size: 40px;
+	cursor: pointer;
+}

@@ -1,10 +1,9 @@
-$.fn.onairplaylist = function(url, interval) {
+$.fn.onairplaylist = function(url, interval, playCallback) {
 	var timestamp = new Date().getTime();		
 	$.getJSON(url+"?req="+timestamp, null, $.proxy(function(data) {
 		data = data.reverse();
 		$("tr", this).remove();
 		$.each(data, $.proxy(function(i, item) {
-			console.log(item);
 			var time = new Date();
 			time.setTime(item.start_time * 1000);
 
@@ -48,8 +47,33 @@ $.fn.onairplaylist = function(url, interval) {
 
 				var trackPreview = $('<td>', {class: "track-preview"});
 				if(item.preview != null) {
-					var trackPreviewPlayer = $('<audio>', {src: item.preview, controls: "true"});
-					trackPreview.append(trackPreviewPlayer);
+					var trackPreviewButton = $('<i>', {"data-preview": item.preview, class: "preview fa fa-play"});
+					trackPreviewButton.click(function() {
+						var url = $(this).attr("data-preview");
+						var jpData = $("#audioplayer").data("jPlayer")
+
+						if(jpData.status.paused == false && jpData.status.src == url) {
+							$("#audioplayer").jPlayer("stop");
+							$(this).removeClass("fa-pause").addClass("fa-play")
+						} else {
+							$(".preview").each(function(){
+								$(this).removeClass("fa-pause");
+								if($(this).hasClass("fa-play") == false) {
+									$(this).addClass("fa-play");
+								}
+							});
+
+							$(this).removeClass("fa-play").addClass("fa-pause");
+
+							$("#audioplayer").jPlayer("setMedia", {
+								mp3: url
+							})
+							setTimeout(function(){
+								$("#audioplayer").jPlayer("play");
+							}, 1200); // This is a dirty workaround to avoid buffer problems
+						}
+					});
+					trackPreview.append(trackPreviewButton);
 				}
 				track.append(trackPreview);
 			}
