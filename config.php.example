@@ -4,7 +4,7 @@ $config = array(
 	"forcePost" => true,
 
 	// Enables or disables fallback to data provider when the "coverart" POST parameter is empty or not found (default value: disabled)
-	"coverart_fallback" => false
+	"coverart_fallback" => false,
 
 	// Class name of the cover art and preview URLs provider
 	"dataProvider" => "Spotify",
