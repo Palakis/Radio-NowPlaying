@@ -34,8 +34,8 @@ class OnAir {
 			}
 		}
 
-		// Check if requesting host is allowed
-		if(isset($this->config['allowedHosts']) 
+		// Check if the caller's hostname is allowed
+		if(isset($this->config['allowedHosts'])
 		&& is_array($this->config['allowedHosts'])) {
 			$allow = false;
 			foreach($this->config['allowedHosts'] as $host) {
@@ -48,9 +48,9 @@ class OnAir {
 				throw new Exception("Unknown host ".$_SERVER['REMOTE_ADDR']);
 			}
 		}
-		
+
 		// Check if song has min duration
-		if(isset($this->config['minDuration']) 
+		if(isset($this->config['minDuration'])
 		&& $_REQUEST['type'] == 'Music'
 		&& $this->config['minDuration'] > 0
 		&& (intval($_REQUEST['duration']) < $this->config['minDuration'])) {
@@ -59,7 +59,7 @@ class OnAir {
 
 		// Instanciate platform classes
 		$this->loadPlatforms($this->config);
-	}	
+	}
 
 	public function run() {
 		// Init metadata values
@@ -105,11 +105,6 @@ class OnAir {
 		echo "OK";
 	}
 
-	public static function Log($message, $filename = "errors.log") {
-		file_put_contents($filename, "[".date("d/m/Y h:i:s")."] ".$message."\n", FILE_APPEND);
-		echo $message."\n";
-	}
-
 	public function loadPlatforms($config) {
 		$this->platforms = array();
 		try {
@@ -135,6 +130,11 @@ class OnAir {
 
 	private function filter($value) {
 		return stripslashes(html_entity_decode(utf8_encode($value), ENT_QUOTES));
+	}
+
+	public static function Log($message, $filename = "errors.log") {
+		file_put_contents($filename, "[".date("d/m/Y h:i:s")."] ".$message."\n", FILE_APPEND);
+		echo $message."\n";
 	}
 }
 ?>
