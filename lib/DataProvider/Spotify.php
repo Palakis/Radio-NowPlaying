@@ -26,7 +26,7 @@ class DataProvider_Spotify implements DataProviderInterface {
   protected function getTrack($artist, $title) {
     $url = $this->endpoint;
 
-    $query = urlencode($artist." ".$title);
+    $query = urlencode("artist:\"".$artist."\" ".$title);
 
     $data = SimpleHTTP::get($this->endpoint."/v1/search?type=track&q=".$query);
     $data = json_decode($data, true);
