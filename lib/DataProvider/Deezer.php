@@ -12,20 +12,11 @@ class DataProvider_Deezer implements DataProviderInterface {
   public function getCover() {
 		$artist = $this->artist;
 		$title = $this->title;
-
-    $url = $this->endpoint;
-
+		
     $query = urlencode($artist." ".$title);
+		$data = SimpleHTTP::get($this->endpoint."search?q=".$query);
 
-    $get = curl_init();
-    curl_setopt($get, CURLOPT_URL, $url."search?q=".$query);
-    curl_setopt($get, CURLOPT_HEADER, FALSE);
-    curl_setopt($get, CURLOPT_RETURNTRANSFER, TRUE);
-
-    $result = curl_exec($get);
-    curl_close($get);
-
-    $json = json_decode($result);
+    $json = json_decode($data);
     if($json->total > 0) {
       return $json->data[0]->album->cover."?size=medium";
     } else {
