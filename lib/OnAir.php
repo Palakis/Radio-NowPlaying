@@ -105,8 +105,7 @@ class OnAir {
 				try {
 					$this->meta->CoverArt = $this->dataProvider->getCover();
 				}
-					catch(Exception $ex) {}
-				}
+				catch(Exception $ex) {}
 			}
 
 			// Audio preview
