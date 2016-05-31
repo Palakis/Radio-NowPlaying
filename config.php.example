@@ -2,10 +2,13 @@
 $config = array(
 	// Accept only POST requests (highly recommended in production environments)
 	"forcePost" => true,
-	
+
+	// Enables or disables fallback to data provider when the "coverart" POST parameter is empty or not found (default value: disabled)
+	"coverart_fallback" => false
+
 	// Class name of the cover art and preview URLs provider
 	"dataProvider" => "Spotify",
-	
+
 	// Deletes unwanted text
 	"textFilters" => array(
 		" POWER INTRO",
@@ -13,16 +16,16 @@ $config = array(
 		"(\(?)(featuring|feat)(.+)",
 		"\(.+\)"
 	),
-	
+
 	// Only allowed some specific source hosts
 	"allowedHosts" => array(
 		"studio.yourstation.com",
 		"127.0.0.1"
 	),
-	
+
 	// Minimum item duration
 	"minDuration" => 30,
-	
+
 	// Target platforms for metadata
 	"platforms" => array(
 		// Writes current song metadata to a JSON file
@@ -52,7 +55,7 @@ $config = array(
 			"password" => "hackme",
 			"mount" => "stream.mp3",
 			// You can also give an array to the "mount" parameter if you want to send metadata to several mountpoints
-			//"mount" => array("stream.mp3", "hd-stream.mp3", "mobile-stream.mp3") 
+			//"mount" => array("stream.mp3", "hd-stream.mp3", "mobile-stream.mp3")
 		),
 		// Sends current song metadata and song history to your LastFM profile
 		"LastFM" => array(

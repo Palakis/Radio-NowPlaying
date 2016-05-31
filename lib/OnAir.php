@@ -84,14 +84,33 @@ class OnAir {
 
 		$this->loadDataProvider($this->meta->Artist, $this->meta->Title);
 
+		// Processing additional metadata : cover art & audio preview
 		$this->meta->CoverArt = null;
 		$this->meta->Preview = null;
 		if($this->meta->Type == 'Music') {
-			try {
-				$this->meta->CoverArt = $this->dataProvider->getCover();
-			}
-			catch(Exception $ex) {}
+			// Cover art
 
+			if(isset($_REQUEST['coverart'])) {
+				$data = $_REQUEST['coverart'];
+
+				$imgdata = base64_decode($data);
+				$f = finfo_open();
+				$mime = finfo_buffer($f, $imgdata, FILEINFO_MIME_TYPE);
+				finfo_close($f);
+
+				// TODO : base64 validation
+				$this->meta->CoverArt = "data:".$mime.";base64,".$data;
+			} else {
+				if(isset($this->config['coverart_fallback'])
+				&& $this->config['coverart'] == true) {
+					try {
+						$this->meta->CoverArt = $this->dataProvider->getCover();
+					}
+					catch(Exception $ex) {}
+				}
+			}
+
+			// Audio preview
 			try {
 				$this->meta->Preview = $this->dataProvider->getPreview();
 			}
