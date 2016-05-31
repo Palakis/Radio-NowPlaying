@@ -89,8 +89,7 @@ class OnAir {
 		$this->meta->Preview = null;
 		if($this->meta->Type == 'Music') {
 			// Cover art
-
-			if(isset($_REQUEST['coverart'])) {
+			if(isset($_REQUEST['coverart']) && !empty($_REQUEST['coverart'])) {
 				$data = $_REQUEST['coverart'];
 
 				$imgdata = base64_decode($data);
@@ -100,12 +99,12 @@ class OnAir {
 
 				// TODO : base64 validation
 				$this->meta->CoverArt = "data:".$mime.";base64,".$data;
-			} else {
-				if(isset($this->config['coverart_fallback'])
+			}
+			elseif(isset($this->config['coverart_fallback'])
 				&& $this->config['coverart'] == true) {
-					try {
-						$this->meta->CoverArt = $this->dataProvider->getCover();
-					}
+				try {
+					$this->meta->CoverArt = $this->dataProvider->getCover();
+				}
 					catch(Exception $ex) {}
 				}
 			}
