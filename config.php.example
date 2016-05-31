@@ -37,10 +37,6 @@ $config = array(
 			"filename" => "playlist.json",
 			"maxKeepTime" => 86400
 		),
-		// Writes current song metadata to an XML file compatible with WebRadioTools
-		"WRTXmlFile" => array(
-			"filename" => "onair.xml"
-		),
 		// Sends current song metadata to a shoutcast server
 		"Shoutcast" => array(
 			"host" => "stream.yourstation.com",
