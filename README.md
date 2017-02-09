@@ -25,7 +25,7 @@ The `config.php.example` file contains most of the possible configuration values
 Make sure your playout system has the ability to send an HTTP request on every song change.  
 Configure it to call `onair.php` (complete URL depends on how you installed Radio-NowPlaying) with the following request parameters :
 - "type" (string, required) : "Music" or "Show"
-- "token" (string, required if configured, optional otherwise) : one of the tokens configured in config.php
+- "token" (string, required) : one of the tokens configured in config.php
 - "title" (string, optional) : the current song's artist (required only when "type" equals "Music")
 - "artist" (string, required) : the current song's artist
 - "duration" (integer, required) : the current song's duration
