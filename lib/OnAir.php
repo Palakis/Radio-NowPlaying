@@ -57,7 +57,12 @@ class OnAir {
 		if(isset($this->config['allowedHosts'])
 			&& is_array($this->config['allowedHosts'])) {
 
-			$host_in_config = in_array(gethostbyname($host), $this->config['allowedHosts']);
+			$host_in_config = false;
+			foreach($this->config['allowedHosts'] as $host) {
+				if(gethostbyname($host) == $_SERVER['REMOTE_ADDR']) {
+					$host_in_config = true;
+				}
+			}
 
 			if(!$host_in_config) {
 				throw new Exception("Unknown host ".$_SERVER['REMOTE_ADDR']);
