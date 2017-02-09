@@ -47,23 +47,31 @@ class OnAir {
 		if(isset($_REQUEST['type']) && $_REQUEST['type'] == 'Music') {
 			if(!isset($_REQUEST['artist'])
 			|| !isset($_REQUEST['type'])
-			|| !isset($_REQUEST['duration'])) {
+			|| !isset($_REQUEST['duration'])
+			|| !isset($_REQUEST['token'])) {
 				throw new Exception("Missing parameters");
 			}
 		}
 
 		// Check if the caller's hostname is allowed
 		if(isset($this->config['allowedHosts'])
-		&& is_array($this->config['allowedHosts'])) {
-			$allow = false;
-			foreach($this->config['allowedHosts'] as $host) {
-				if(gethostbyname($host) == $_SERVER['REMOTE_ADDR']) {
-					$allow = true;
-				}
-			}
+			&& is_array($this->config['allowedHosts'])) {
 
-			if(!$allow) {
+			$host_in_config = in_array(gethostbyname($host), $this->config['allowedHosts']);
+
+			if(!$host_in_config) {
 				throw new Exception("Unknown host ".$_SERVER['REMOTE_ADDR']);
+			}
+		}
+
+		// Check if the caller's token is allowed
+		if(isset($this->config['allowedTokens']) 
+			&& is_array($this->config['allowedTokens'])) {
+
+			$token_in_config = in_array($_REQUEST['token'], $this->config['allowedTokens']);
+
+			if(!$token_in_config) {
+				throw new Exception("Token not valid");
 			}
 		}
 

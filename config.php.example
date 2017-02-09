@@ -23,6 +23,11 @@ $config = array(
 		"127.0.0.1"
 	),
 
+	"allowedTokens" => array(
+		"yourpasswordhere",
+		"anotherpasswordhere"
+	),
+
 	// Minimum item duration
 	"minDuration" => 30,
 
