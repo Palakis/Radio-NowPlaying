@@ -132,7 +132,7 @@ class OnAir {
 				$this->meta->CoverArt = "data:".$mime.";base64,".$data;
 			}
 			elseif(isset($this->config['coverart_fallback'])
-				&& $this->config['coverart'] == true) {
+				&& $this->config['coverart_fallback'] == true) {
 				try {
 					$this->meta->CoverArt = $this->dataProvider->getCover();
 				}
