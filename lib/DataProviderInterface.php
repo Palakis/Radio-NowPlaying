@@ -18,7 +18,7 @@ License along with this library. If not, see <https://www.gnu.org/licenses/>
 */
 
 interface DataProviderInterface {
-	public function __construct($artist, $title);
+	public function __construct($artist, $title, $config);
 	public function getCover();
 	public function getPreview();
 }

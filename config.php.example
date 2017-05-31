@@ -9,6 +9,12 @@ $config = array(
 	// Class name of the cover art and preview URLs provider
 	"dataProvider" => "Spotify",
 
+	// Authentication settings if Spotify is used for covers and previews
+	"dataProviderConfig" => array(
+		"client_id" => '...',
+		"client_secret" => '...'
+	),
+
 	// Deletes unwanted text
 	"textFilters" => array(
 		" POWER INTRO",

@@ -20,9 +20,19 @@ License along with this library. If not, see <https://www.gnu.org/licenses/>
 class DataProvider_Spotify implements DataProviderInterface {
 	protected $endpoint = "https://api.spotify.com";
 	protected $track;
+  protected $config;
 
-	public function __construct($artist, $title) {
-  	$this->track = $this->getTrack($artist, $title);
+	public function __construct($artist, $title, $config) {
+    $this->config = $config;
+    
+    if($this->config == null 
+      || $this->config['client_id'] == null
+      || $this->config['client_secret'] == null)
+    {
+      throw new Exception("incorrect Spotify configuration");
+    }
+
+    $this->track = $this->getTrack($artist, $title);
 	}
 
   public function getCover() {
@@ -46,10 +56,32 @@ class DataProvider_Spotify implements DataProviderInterface {
 
     $query = urlencode("artist:\"".$artist."\" ".$title);
 
-    $data = SimpleHTTP::get($this->endpoint."/v1/search?type=track&q=".$query);
+    $access_token = $this->authenticate(
+      $this->config['client_id'], 
+      $this->config['client_secret']);
+
+    $data = SimpleHTTP::get(
+      $this->endpoint."/v1/search?type=track&q=".$query,
+      null, array('Authorization: Bearer '.$access_token));
+
     $data = json_decode($data, true);
 
     return $data['tracks']['items'][0];
+  }
+
+  protected function authenticate($client_id, $client_secret) {
+    $resp = SimpleHTTP::post(
+      "https://accounts.spotify.com/api/token",
+      array('grant_type' => 'client_credentials'),
+      array('username' => $client_id, 'password' => $client_secret)
+    );
+
+    $resp = json_decode($resp, true);
+
+    if($resp['access_token'] != null)
+      return $resp['access_token'];
+    else
+      throw new Exception('Spotify auth failed');
   }
 }
 

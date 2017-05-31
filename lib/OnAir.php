@@ -113,8 +113,6 @@ class OnAir {
 		}
 		// -- END PREPROCESSING --
 
-		$this->loadDataProvider($this->meta->Artist, $this->meta->Title);
-
 		// Processing additional metadata : cover art & audio preview
 		$this->meta->CoverArt = null;
 		$this->meta->Preview = null;
@@ -134,13 +132,19 @@ class OnAir {
 			elseif(isset($this->config['coverart_fallback'])
 				&& $this->config['coverart_fallback'] == true) {
 				try {
+					$this->loadDataProvider($this->meta->Artist, $this->meta->Title);
 					$this->meta->CoverArt = $this->dataProvider->getCover();
 				}
-				catch(Exception $ex) {}
+				catch(Exception $ex) {
+					$this::Log("Cover art fetch failed. Reason: '".$ex->getMessage()."'");
+				}
 			}
 
 			// Audio preview
 			try {
+				if($this->dataProvider == null)
+					$this->loadDataProvider($this->meta->Artist, $this->meta->Title);
+
 				$this->meta->Preview = $this->dataProvider->getPreview();
 			}
 			catch(Exception $ex) {}
@@ -169,7 +173,7 @@ class OnAir {
 
 	public function loadDataProvider($artist, $title) {
 		$class = 'DataProvider_'.$this->config['dataProvider'];
-		$this->dataProvider = new $class($artist, $title);
+		$this->dataProvider = new $class($artist, $title, $this->config['dataProviderConfig']);
 	}
 
 	public function addPlatform(PlatformInterface $platform) {

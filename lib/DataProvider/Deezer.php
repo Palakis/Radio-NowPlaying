@@ -21,8 +21,10 @@ class DataProvider_Deezer implements DataProviderInterface {
 	protected $endpoint = "http://api.deezer.com/2.0/";
   protected $artist;
   protected $title;
+  protected $config;
 
-	public function __construct($artist, $title) {
+	public function __construct($artist, $title, $config) {
+    $this->config = $config;
     $this->artist = $artist;
     $this->title = $title;
 	}

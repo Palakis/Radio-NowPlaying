@@ -18,7 +18,9 @@ License along with this library. If not, see <https://www.gnu.org/licenses/>
 */
 
 class SimpleHTTP {
-	public static function get($url, $auth = null, $useragent = "NowPlaying(Mozilla Compatible)") {
+	public static function get($url, $auth = null, 
+		array $headers = null, $useragent = "NowPlaying(Mozilla Compatible)"
+	) {
 		$curl = curl_init();
 		curl_setopt($curl, CURLOPT_URL, $url);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -29,6 +31,9 @@ class SimpleHTTP {
 			curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
 			curl_setopt($curl, CURLOPT_USERPWD, $auth["username"].":".$auth["password"]);
 		}
+
+		if($headers != null)
+			curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
 
 		$response = curl_exec($curl);
 
@@ -38,14 +43,16 @@ class SimpleHTTP {
 
 		$returnCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 		if($returnCode != 200) {
-			throw new Exception("HTTP error code ".$returnCode. " for URL '".$url."'");
+			throw new Exception("HTTP error code ".$returnCode. " for URL '".$url."'. Response body: ".substr($response, 0, 120));
 		}
  
 		curl_close($curl);
 		return $response;		
 	}
 
-	public static function post($url, array $data, $auth = null, $useragent = "NowPlaying(Mozilla Compatible)") {
+	public static function post($url, array $data, $auth = null, 
+		array $headers = null, $useragent = "NowPlaying(Mozilla Compatible)"
+	) {
 		$curl = curl_init();
 		curl_setopt($curl, CURLOPT_URL, $url);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -56,6 +63,9 @@ class SimpleHTTP {
 			curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
 			curl_setopt($curl, CURLOPT_USERPWD, $auth["username"].":".$auth["password"]);
 		}
+
+		if($headers != null)
+			curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
 
 		$datastring = "";
 		foreach($data as $key => $value) {
@@ -75,7 +85,7 @@ class SimpleHTTP {
 
 		$returnCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 		if($returnCode != 200) {
-			throw new Exception("HTTP error code ".$returnCode. " for URL '".$url."'");
+			throw new Exception("HTTP error code ".$returnCode. " for URL '".$url."'. Response body: ".substr($response, 0, 120));
 		}
 
 		curl_close($curl);
