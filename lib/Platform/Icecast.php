@@ -43,14 +43,20 @@ class Platform_Icecast implements PlatformInterface {
 	}
 
 	private function sendToMount($oneliner, $mount) {
-		$url = "http://".$this->host.":".$this->port."/admin/metadata?mode=updinfo";
-		$url .= "&mount=".$mount;		
-		$url .= "&song=".rawurlencode(utf8_decode($oneliner));
+		$metadataEndpoint = "http://".$this->host.":".$this->port."/admin/metadata";
 
-		SimpleHTTP::get($url, array(
-			"username" => $this->username, 
-			"password" => $this->password
-		));
+		SimpleHTTP::get(
+			$metadataEndpoint,
+			[
+				"mode" => "updinfo",
+				"mount" => $mount,
+				"song" => utf8_decode($oneliner)
+			],
+			[
+				"username" => $this->username,
+				"password" => $this->password
+			]
+		)
 	}
 }
 
