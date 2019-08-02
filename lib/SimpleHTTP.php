@@ -59,20 +59,21 @@ class SimpleHTTP {
 		curl_setopt($curl, CURLOPT_USERAGENT, $useragent);
 		curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
 		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+
 		if($auth != null && is_array($auth)) {
 			curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
 			curl_setopt($curl, CURLOPT_USERPWD, $auth["username"].":".$auth["password"]);
 		}
 
-		if($headers != null)
+		if($headers != null) {
 			curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-
-		$datastring = "";
-		foreach($data as $key => $value) {
-			$value = urlencode($value);
-			$datastring .= $key.'='.$value.'&';
 		}
-		rtrim($datastring, '&');
+
+		$datafields = [];
+		foreach($data as $key => $value) {
+			$datafields[] = ($key."=".urlencode($value));
+		}
+		$datastring = join('&', datafields);
 
 		curl_setopt($curl, CURLOPT_POST, count($data));
 		curl_setopt($curl, CURLOPT_POSTFIELDS, $datastring);
