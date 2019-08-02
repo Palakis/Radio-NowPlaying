@@ -18,7 +18,7 @@ License along with this library. If not, see <https://www.gnu.org/licenses/>
 */
 
 class SimpleHTTP {
-	public static function get($url, $params = null, $auth = null, 
+	public static function get($url, array $params = null, $auth = null, 
 		array $headers = null, $useragent = "NowPlaying(Mozilla Compatible)"
 	) {
 		$curl = curl_init();

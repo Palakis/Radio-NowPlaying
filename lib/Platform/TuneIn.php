@@ -29,14 +29,13 @@ class Platform_TuneIn implements PlatformInterface {
 	}
 
 	public function send(Metadata $meta) {
-		$url = "http://air.radiotime.com/Playing.ashx";
-		$url .= "?partnerId=".$this->partnerId;
-		$url .= "&partnerKey=".$this->partnerKey;
-		$url .= "&id=".$this->stationId;
-		$url .= "&title=".$meta->Title;
-		$url .= "&artist=".$meta->Artist;
-		
-		SimpleHTTP::get($url);
+		SimpleHTTP::get("http://air.radiotime.com/Playing.ashx", [
+			"partnerId" => $this->partnerId,
+			"partnerKey" => $this->partnerKey,
+			"id" => $this->stationId,
+			"title" => $meta->Title,
+			"artist" => $meta->Artist
+		]);
 	}
 }
 
