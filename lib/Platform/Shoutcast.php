@@ -29,14 +29,15 @@ class Platform_Shoutcast implements PlatformInterface {
 	}
 
 	public function send(Metadata $meta) {
-		$url = "http://".$this->host.":".$this->port."/admin.cgi?mode=updinfo";
-		$url .= "&pass=".$this->password;
-		$url .= "&song=".rawurlencode(utf8_decode($meta->Oneliner));
+		$adminUrl = "http://".$this->host.":".$this->port."/admin.cgi";
 		
 		try {
-			SimpleHTTP::get($url);
-		}
-		catch(Exception $ex) {
+			SimpleHTTP::get($adminUrl, [
+				"mode" => "updinfo",
+				"pass" => $this->password,
+				"song" => utf8_decode($meta->Oneliner)
+			]);
+		} catch(Exception $ex) {
 			if(strstr($ex->getMessage(), "Empty reply from server") == false) {
 				throw $ex;
 			}
